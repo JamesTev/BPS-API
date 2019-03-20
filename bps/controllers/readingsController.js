@@ -1,13 +1,19 @@
+var con = require('../db');
+
 expectedKeysInst = ['t_offset', 'inst_vol','inst_flow']
 expectedKeysOverview = ['duration', 'total_vol','avg_flow']
 
-exports.instReadings = new Array();
+var instReadings = new Array();
+exports.instReadings = instReadings;
 
 exports.receive_readings = function (req, res) {
     // expects a json array of inst flow readings
     //console.log(req.body)
     //TODO: decide if I should accept valid readings if there is one or more invalid readings in same pump cycle
     var validReadCount = 0
+    if(!Array.isArray(req.body)){
+        req.body = [req.body]
+    }
     for(var i=0; i<Object.keys(req.body).length; i++){ 
         if(handleInstReading(req.body[i])){
             validReadCount++
@@ -21,7 +27,6 @@ exports.receive_readings = function (req, res) {
         res.send(validReadCount+" / "+Object.keys(req.body).length+" inst. readings received.")
         console.log(validReadCount+" / "+Object.keys(req.body).length+" inst. readings received.")
   }
-  ins
   console.log(instReadings);
 }
 
@@ -29,6 +34,13 @@ exports.receive_readings = function (req, res) {
 exports.store_session_data = function(req,res){
     if (!req.body || Object.keys(req.body).length!=3){ //expecting 3 key-value pairs
         return res.sendStatus(400) // equivalent to res.status(400).send('Bad Request')
+    }
+    if(instReadings.length < 1){
+        return res.status(400).json({
+            status: 'error',
+            message: 'Trying to store reading set but no instantaneous readings detected',
+            data: {}
+        }); 
     }
     ovReadingObj = verifyReadingData(req.body, expectedKeysOverview)
     if(!ovReadingObj){
@@ -65,17 +77,34 @@ exports.get_inst_reading_set = function(req,res){
 
 //Retrieve reading set data
 exports.get_overview_data = function(req,res){
-    var parsedID = parseInt(req.params.id) 
-    if(isNaN(parsedID)){ //isNaN will return true if id is not supplied or not valid
-        res.send("ID is not a valid integer") //acts like a function return - will exit app.get()?
+    var requestAll = false;
+    var ID = -1;
+    if(!req.params.hasOwnProperty("id")){
+        console.log("Retrieve all overview data...");
+        requestAll=true;
+    }
+    else if(isNaN(req.params.id)){
+        console.log("invalid ID")
+        res.status(400).json({
+            status: 'error',
+            message: 'reading ID is not a valid integer',
+            data: {}
+        });        
+        return;
+    }else{
+        //valid ID supplied in URL
+        ID = req.params.id;
     }
     if(con){
-        con.query("SELECT * FROM readings_table WHERE overview_id = "+req.params.id+";", function (err, result, fields) {
+        con.query("SELECT * FROM overview_table WHERE ID = "+ID+" OR "+requestAll+";", function (err, result, fields) {
             if (err){
                 throw err
             }
-            console.log("Instantaneous readings for overview set "+req.params.id+" retrieved successfully");
-            res.json(result)
+            res.status(200).json({
+                status: 'success',
+                message: '',
+                data: result
+            });   
         });
     }
     //res.json(result)
@@ -117,8 +146,9 @@ function storeInstantaneousReadings(overview_id){
         var sql = "INSERT INTO readings_table (overview_id, t_offset, inst_volume, inst_flow_rate) " +
             "VALUES ('"+overview_id+"', '"+instReadings[i][expectedKeysInst[0]]+"','"+instReadings[i][expectedKeysInst[1]]+"', '"+instReadings[i][expectedKeysInst[2]]+"')";
         con.query(sql, function (err, result) {
-            return false;
-            if (err) throw err;
+            if(err){
+                return false;
+            }
         });
     }
     console.log("Instantaneous records stored");
