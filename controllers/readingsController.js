@@ -1,4 +1,5 @@
 var con = require('../db');
+var _ = require('lodash/core');
 
 expectedKeysInst = ['t_offset', 'inst_vol','inst_flow']
 expectedKeysOverview = ['duration', 'total_vol','avg_flow']
@@ -59,10 +60,15 @@ exports.store_session_data = function(req,res){
 
 //Retrieve reading set data
 exports.get_inst_reading_set = function(req,res){
-    var parsedID = parseInt(req.params.id) 
-    if(isNaN(parsedID)){ //isNaN will return true if id is not supplied or not valid
-        res.send("ID is not a valid integer") //acts like a function return - will exit app.get()?
-    }
+    if(isNaN(req.params.id)){ //isNaN will return true if id is not supplied or not valid
+        console.log("invalid ID")
+        res.status(400).json({
+            status: 'error',
+            message: 'reading ID is not a valid integer',
+            data: {}
+        });        
+        return;    
+    }  
     if(con){
         con.query("SELECT * FROM readings_table WHERE overview_id = "+req.params.id+";", function (err, result, fields) {
             if (err){
@@ -72,31 +78,34 @@ exports.get_inst_reading_set = function(req,res){
             res.json(result)
         });
     }
+    else{
+        internalDBError();
+    }
     //res.json(result)
 }
-
 //Retrieve reading set data
 exports.get_overview_data = function(req,res){
     var requestAll = false;
     var ID = -1;
-    if(!req.params.hasOwnProperty("id")){
+    let whereClause = "";
+    if(req.params.hasOwnProperty("id")){
+        whereClause = "WHERE ID = "+req.params.id;
         console.log("Retrieve all overview data...");
-        requestAll=true;
-    }
-    else if(isNaN(req.params.id)){
-        console.log("invalid ID")
-        res.status(400).json({
+        if(isNaN(req.params.id)){
+            console.log("invalid ID")
+            res.status(400).json({
             status: 'error',
             message: 'reading ID is not a valid integer',
             data: {}
-        });        
-        return;
-    }else{
-        //valid ID supplied in URL
-        ID = req.params.id;
+            });        
+            return;
+        }
+    }else if(req.query.hasOwnProperty("month")){
+        whereClause = 'WHERE MONTH(timestamp) = '+req.query.month;
     }
+ 
     if(con){
-        con.query("SELECT * FROM overview_table WHERE ID = "+ID+" OR "+requestAll+";", function (err, result, fields) {
+        con.query("SELECT * FROM overview_table "+whereClause+";", function (err, result, fields) {
             if (err){
                 throw err
             }
@@ -107,7 +116,19 @@ exports.get_overview_data = function(req,res){
             });   
         });
     }
+    else{
+        internalDBError();
+    }
     //res.json(result)
+}
+
+
+function internalDBError(){
+    res.status(500).json({
+        status: 'error',
+        message: 'Failure to connect to DB to perform query',
+        data: {}
+    });    
 }
 
 function handleInstReading(obj){

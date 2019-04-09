@@ -1,10 +1,10 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+var cors = require('cors');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var compression = require('compression');
-var helmet = require('helmet');
 var bodyParser = require('body-parser')
 
 var dbConnection = require('./db')
@@ -20,12 +20,13 @@ app.set('views', path.join(__dirname, 'views')); //tell the engine where views a
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
-app.use(helmet());
 app.use(compression());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'))); //set path for static file serving
+
+app.use(cors())
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -46,8 +47,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-var DEBUG = true;
-
 //configure server to allow cross-origin requests
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -62,8 +61,13 @@ var headers = {
 }
 //connect to DB using connection instance
 dbConnection.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected to DB");
+  if (err){
+    console.log("Error connecting to DB: "+err);
+  }
+  else{
+    console.log("Connected to DB");
+  }
 });
+
 
 module.exports = app;
