@@ -7,20 +7,25 @@
     "devstart": "DEBUG=bps:* nodemon ./bin/www"
   },
   "dependencies": {
-    "body-parser": "^1.18.3",
-    "compression": "^1.7.3",
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "express": "~4.16.0",
+    "express-jwt": "^5.3.1",
+    "fs": "0.0.1-security",
     "helmet": "^3.16.0",
     "http-errors": "~1.6.2",
+    "jwks-rsa": "^1.4.0",
     "morgan": "~1.9.0",
-    "mysql": "^2.16.0",
-    "pug": "2.0.0-beta11"
+    "mysql": "^2.17.1",
+    "pubnub": "^4.23.0",
+    "pug": "^2.0.3",
+    "telebot": "^1.2.6"
   },
   "devDependencies": {
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.18.11"
   },
   "repository": {
     "type": "git",

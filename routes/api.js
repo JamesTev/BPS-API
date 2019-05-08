@@ -4,6 +4,7 @@ var readings_controller = require('../controllers/readingsController')
 
 router.post('/receive_readings', readings_controller.receive_readings);
 router.post('/store_data', readings_controller.store_session_data);
+router.post('/send_telegram', readings_controller.send_tg); 
 
 router.get('/inst_readings/:id', readings_controller.get_inst_reading_set)
 router.get('/overview_data/:id', readings_controller.get_overview_data) 

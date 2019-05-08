@@ -1,0 +1,6 @@
+{   
+    "telegramBotID": "801344550:AAHdspZVvF6oEUt2TUAkgGZMGU4pKgvTWlQ", 
+    "chatID": "534182803",
+    "telegramConfigFile" : "./telegram.config",
+    "servicePort": "3010"
+}

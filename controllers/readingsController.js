@@ -1,16 +1,19 @@
 var con = require('../db');
 var _ = require('lodash/core');
+var tg = require('../telegramLib');
+var pub = require('../pubnubHelper')
 
-expectedKeysInst = ['t_offset', 'inst_vol','inst_flow']
+expectedKeysInst = ['t', 'v','f']
 expectedKeysOverview = ['duration', 'total_vol','avg_flow']
 
-var instReadings = new Array();
+var instReadings = [];
 exports.instReadings = instReadings;
 
 exports.receive_readings = function (req, res) {
     // expects a json array of inst flow readings
     //console.log(req.body)
     //TODO: decide if I should accept valid readings if there is one or more invalid readings in same pump cycle
+    instReadings = [];
     var validReadCount = 0
     if(!Array.isArray(req.body)){
         req.body = [req.body]
@@ -122,6 +125,23 @@ exports.get_overview_data = function(req,res){
     //res.json(result)
 }
 
+exports.send_tg = function(req, res){
+    if(req.body.message){
+        tg.sendMessage("534182803", req.body.message);
+        if(req.body.codeword == "NEW_DATA"){
+            var d = new Date()
+            pub.pubnubMessage({title:"New data", description: "New data received from BPS system at "+d.toLocaleString()})
+        }
+        else if(req.body.codeword == "DATA_UPLOAD_ERROR"){
+            var d = new Date()
+            pub.pubnubMessage({title:"Data upload error", description: "Failed to upload data after pump cycle at  "+d.toLocaleString()})
+        }
+        res.send("Message sent")
+    }else{
+        res.status(400).send("No message supplied in POST data")
+    }
+    
+}
 
 function internalDBError(){
     res.status(500).json({
@@ -163,11 +183,14 @@ function checkFloats(responseBody){
 }
 
 function storeInstantaneousReadings(overview_id){
+    
+    console.log(instReadings)
     for (let i = 0; i < instReadings.length; i++) {
         var sql = "INSERT INTO readings_table (overview_id, t_offset, inst_volume, inst_flow_rate) " +
             "VALUES ('"+overview_id+"', '"+instReadings[i][expectedKeysInst[0]]+"','"+instReadings[i][expectedKeysInst[1]]+"', '"+instReadings[i][expectedKeysInst[2]]+"')";
         con.query(sql, function (err, result) {
             if(err){
+                console.log(err)
                 return false;
             }
         });
@@ -185,8 +208,9 @@ function storeOverviewReadingInDB(data){
        console.log("Overview Record stored");
        if(storeInstantaneousReadings(result.insertId)){
            return true
+       }else{
+            return false;
        }
-       return false;
      });
   }
   
@@ -201,19 +225,3 @@ function storeOverviewReadingInDB(data){
       });
   }
   
-
-function buildInstReading(parsedReqObject){
-    return {
-        inst_flow_rate: parsedReqObject[expectedKeysInst[0]],
-        inst_vol: parsedReqObject[expectedKeysInst[1]], 
-        t_offset: parsedReqObject[expectedKeysInst[2]]
-    }
-}
-
-function buildOverviewReading(parsedReqObject){
-    return {
-        pump_volume: parsedReqObject[expectedKeysOverview[0]],
-        duration: parsedReqObject[expectedKeysOverview[1]], 
-        avg_flow_rate: parsedReqObject[expectedKeysOverview[2]]
-    }
-}

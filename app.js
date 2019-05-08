@@ -1,3 +1,4 @@
+'use strict';
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -6,6 +7,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var compression = require('compression');
 var bodyParser = require('body-parser')
+var jwt = require('express-jwt');
+var jwks = require('jwks-rsa');
 
 var dbConnection = require('./db')
 
@@ -54,6 +57,19 @@ app.use(function(req, res, next) {
     next();
 });
 
+var authCheck = jwt({
+  secret: jwks.expressJwtSecret({
+      cache: true,
+      rateLimit: true,
+      jwksRequestsPerMinute: 5,
+      jwksUri: 'https://dev-x554m04n.eu.auth0.com/.well-known/jwks.json'
+}),
+audience: 'http://bps.co.za',
+issuer: 'https://dev-x554m04n.eu.auth0.com/',
+algorithms: ['RS256']
+});
+
+app.use(authCheck);
 // Set the headers for number plate request
 var headers = {
     'User-Agent':       'Super Agent/0.0.1',

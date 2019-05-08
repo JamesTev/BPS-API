@@ -2,17 +2,9 @@ import requests
 import json
 
 url = "http://james-tev.local:3010/api/receive_readings"
-d =  [{ "inst_flow": 82, "inst_vol": 2.2, "t_offset": 10 },
-      { "inst_flow": 75, "inst_vol": 5.3, "t_offset": 20 },
-      { "inst_flow": 77, "inst_vol": 10.2, "t_offset": 30 },
-      { "inst_flow": 95, "inst_vol": 17.2, "t_offset": 40 },
-      { "inst_flow": 120, "inst_vol": 23.2, "t_offset": 50 },
-      { "inst_flow": 105, "inst_vol": 30.21, "t_offset": 60 },
-      { "inst_flow": 82, "inst_vol": 35.61, "t_offset": 70 },
-      { "inst_flow": 52, "inst_vol": 40.12, "t_offset": 80 },
-      { "inst_flow": 12, "inst_vol": 42, "t_offset": 90 }]
+d =  [{"inst_flow":9.828,"inst_vol":1.12644,"t_offset":0},{"inst_flow":9.6768,"inst_vol":2.709,"t_offset":10},{"inst_flow":9.6768,"inst_vol":4.3218,"t_offset":20},{"inst_flow":9.828,"inst_vol":5.95224,"t_offset":30},{"inst_flow":9.828,"inst_vol":7.59024,"t_offset":40},{"inst_flow":9.828,"inst_vol":9.22572,"t_offset":50},{"inst_flow":9.828,"inst_vol":10.8612,"t_offset":60},{"inst_flow":9.828,"inst_vol":12.49668,"t_offset":70},{"inst_flow":9.828,"inst_vol":14.13468,"t_offset":80},{"inst_flow":9.979199,"inst_vol":15.77268,"t_offset":90},{"inst_flow":9.828,"inst_vol":17.41068,"t_offset":100},{"inst_flow":9.828,"inst_vol":19.05372,"t_offset":110},{"inst_flow":9.828,"inst_vol":20.69424,"t_offset":120},{"inst_flow":9.6768,"inst_vol":22.32972,"t_offset":130},{"inst_flow":9.828,"inst_vol":23.97276,"t_offset":140},{"inst_flow":9.828,"inst_vol":25.6032,"t_offset":150},{"inst_flow":9.6768,"inst_vol":27.23364,"t_offset":160},{"inst_flow":9.828,"inst_vol":28.86408,"t_offset":170},{"inst_flow":9.979199,"inst_vol":30.50712,"t_offset":180},{"inst_flow":9.979199,"inst_vol":32.15772,"t_offset":190},{"inst_flow":9.828,"inst_vol":33.80832,"t_offset":200},{"inst_flow":9.6768,"inst_vol":35.44884,"t_offset":210},{"inst_flow":9.828,"inst_vol":37.08432,"t_offset":220},{"inst_flow":9.828,"inst_vol":38.72484,"t_offset":230},{"inst_flow":9.979199,"inst_vol":40.3704,"t_offset":240},{"inst_flow":9.979199,"inst_vol":42.01596,"t_offset":250},{"inst_flow":9.979199,"inst_vol":43.66908,"t_offset":260},{"inst_flow":9.828,"inst_vol":45.31716,"t_offset":270},{"inst_flow":9.979199,"inst_vol":46.96776,"t_offset":280},{"inst_flow":9.828,"inst_vol":48.61836,"t_offset":290},{"inst_flow":9.979199,"inst_vol":50.27148,"t_offset":300},{"inst_flow":9.828,"inst_vol":51.91956,"t_offset":310},{"inst_flow":9.979199,"inst_vol":53.57016,"t_offset":320},{"inst_flow":9.828,"inst_vol":55.21068,"t_offset":330},{"inst_flow":9.2232,"inst_vol":56.83104,"t_offset":340},{"inst_flow":7.4088,"inst_vol":58.17672,"t_offset":350},{"inst_flow":7.1064,"inst_vol":59.35356,"t_offset":360},{"inst_flow":7.1064,"inst_vol":60.5304,"t_offset":370},{"inst_flow":7.1064,"inst_vol":61.71228,"t_offset":380},{"inst_flow":7.1064,"inst_vol":62.88912,"t_offset":390},{"inst_flow":6.9552,"inst_vol":64.06092,"t_offset":400},{"inst_flow":6.9552,"inst_vol":65.23272,"t_offset":410},{"inst_flow":6.9552,"inst_vol":66.40452,"t_offset":420},{"inst_flow":6.9552,"inst_vol":67.57884,"t_offset":430},{"inst_flow":6.9552,"inst_vol":68.7582,"t_offset":440},{"inst_flow":7.1064,"inst_vol":69.94008,"t_offset":450},{"inst_flow":7.1064,"inst_vol":71.12196,"t_offset":460},{"inst_flow":6.9552,"inst_vol":72.2988,"t_offset":470},{"inst_flow":7.1064,"inst_vol":73.47564,"t_offset":480},{"inst_flow":7.1064,"inst_vol":74.655,"t_offset":490},{"inst_flow":7.1064,"inst_vol":75.83184,"t_offset":500},{"inst_flow":0,"inst_vol":76.18464,"t_offset":510}]
 
-# payload = "inst_vol=4.5&inst_flow=310&t_offset=30"
+# payload = ""inst_vol"=4.5&"inst_flow"=310&"t_offset"=30"
 payload = json.dumps(d)
 headers = {
     'Content-Type': "application/json",
