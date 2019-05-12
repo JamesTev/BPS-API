@@ -20,11 +20,11 @@ const tg = new Telegram(config.telegramBotID); //create Telegram instance that i
  * @returns {Array} - Array of Promises corresponding to each message that is sent
  */
 const sendMultipleRx = exports.sendMultipleRx = (jsonMessage) => {
-	let target = (jsonMessage.hasOwnProperty("target") ? jsonMessage.target : config.telegramChatID); // ? no telegramChatID in config.json
+	let target = (jsonMessage.hasOwnProperty("target") ? jsonMessage.target : aUsers); // ? no telegramChatID in config.json
 	target = (Array.isArray(target) ? target : [target])
 	let promiseArr = new Array();
 	for(var t of target){
-        promiseArr.push(tg.sendMessage (t, "WBX Bot: " + jsonMessage.content))
+        promiseArr.push(tg.sendMessage (t, "BPS Bot: " + jsonMessage.content))
     }	
     return promiseArr;
 }
@@ -155,10 +155,11 @@ const deleteHandler = (msg) => {
 exports.sendMessage = (id, text) => {return tg.sendMessage(id, text)}; //expose Telebot sendMessage function to controller
 
 const whoHandler = (msg) => {
+    console.log(msg)
     msg.reply.text("BPS Bot: You are "+msg.from.first_name+" "+msg.from.last_name, {asReply: true})
 }
 
-let aUsers = []//readTelegramConfig(); //read in the list of subscribed users and store in this variable
+let aUsers = readTelegramConfig(); //read in the list of subscribed users and store in this variable
 exports.aUsers = aUsers; //make list of users available to the controller
 
 console.log ("Current subscribed Telegram users:" + aUsers);

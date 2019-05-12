@@ -11,7 +11,7 @@ exports.instReadings = instReadings;
 
 exports.receive_readings = function (req, res) {
     // expects a json array of inst flow readings
-    //console.log(req.body)
+    console.log(req.body)
     //TODO: decide if I should accept valid readings if there is one or more invalid readings in same pump cycle
     instReadings = [];
     var validReadCount = 0
@@ -127,7 +127,9 @@ exports.get_overview_data = function(req,res){
 
 exports.send_tg = function(req, res){
     if(req.body.message){
-        tg.sendMessage("534182803", req.body.message);
+        //tg.sendMessage("534182803", req.body.message);
+        tg.sendMultipleRx({content: req.body.message})
+
         if(req.body.codeword == "NEW_DATA"){
             var d = new Date()
             pub.pubnubMessage({title:"New data", description: "New data received from BPS system at "+d.toLocaleString()})
