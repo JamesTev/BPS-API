@@ -8,7 +8,7 @@ expectedKeysOverview = ['duration', 'total_vol','avg_flow']
 
 var instReadings = [];
 exports.instReadings = instReadings;
-con = dbConnection.con
+var con = dbConnection.con
 
 exports.receive_readings = function (req, res) {
     // expects a json array of inst flow readings

@@ -9,10 +9,9 @@ var dbConfig = {
   database: "bps_db"
 };
 
-var con;
+var con = mysql.createConnection(dbConfig); // Recreate the con, since the old one cannot be reused.
 
 exports.dbConnect = function dbConnect() {
-  con = mysql.createConnection(dbConfig); // Recreate the con, since the old one cannot be reused.
 
   con.connect(function(err) {              // The server is either down
     if(err) {                                     // or restarting (takes a while sometimes).
