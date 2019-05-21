@@ -1,10 +1,12 @@
-var con = require('../db');
+var dbConnection = require('../db');
 var _ = require('lodash/core');
 var tg = require('../telegramLib');
 var pub = require('../pubnubHelper')
 
 expectedKeysInst = ['t', 'v','f']
 expectedKeysOverview = ['duration', 'total_vol','avg_flow']
+
+var con = dbConnection.con
 
 var instReadings = [];
 exports.instReadings = instReadings;
@@ -82,7 +84,7 @@ exports.get_inst_reading_set = function(req,res){
         });
     }
     else{
-        internalDBError();
+        internalDBError(res);
     }
     //res.json(result)
 }
@@ -120,7 +122,7 @@ exports.get_overview_data = function(req,res){
         });
     }
     else{
-        internalDBError();
+        internalDBError(res);
     }
     //res.json(result)
 }
@@ -145,7 +147,7 @@ exports.send_tg = function(req, res){
     
 }
 
-function internalDBError(){
+function internalDBError(res){
     res.status(500).json({
         status: 'error',
         message: 'Failure to connect to DB to perform query',
