@@ -22,7 +22,7 @@ exports.dbConnect = function dbConnect() {
       console.log('DB connected')
     }                                     // to avoid a hot loop, and to allow our node script to
   });                                     // process asynchronous requests in the meantime.
-                                          // If you're also serving http, display a 503 error.
+
   con.on('error', function(err) {
     if(err.code === 'PROTOCOL_con_LOST') { // con to the MySQL server is usually
       console.log('DB connection lost - reconnecting...', err);
@@ -33,4 +33,4 @@ exports.dbConnect = function dbConnect() {
   });
 }
 
-//module.exports = dbConnect();
+exports.con = con;

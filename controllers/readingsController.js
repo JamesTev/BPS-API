@@ -1,4 +1,4 @@
-var con = require('../db');
+var dbConnection = require('../db');
 var _ = require('lodash/core');
 var tg = require('../telegramLib');
 var pub = require('../pubnubHelper')
@@ -8,6 +8,7 @@ expectedKeysOverview = ['duration', 'total_vol','avg_flow']
 
 var instReadings = [];
 exports.instReadings = instReadings;
+con = dbConnection.con
 
 exports.receive_readings = function (req, res) {
     // expects a json array of inst flow readings
