@@ -76,14 +76,7 @@ var headers = {
     'Content-Type':     'application/json'
 }
 //connect to DB using connection instance
-dbConnection.connect(function(err) {
-  if (err){
-    console.log("Error connecting to DB: "+err);
-  }
-  else{
-    console.log("Connected to DB");
-  }
-});
+dbConnection.dbConnect();
 
 
 module.exports = app;
