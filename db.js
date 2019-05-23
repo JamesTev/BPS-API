@@ -1,5 +1,7 @@
 var express = require('express');
 var mysql = require('mysql');
+var tg = require('./telegramLib')
+var config = require('./config')
 
 //create con object to DB
 var dbConfig = {
@@ -28,7 +30,8 @@ exports.dbConnect = function dbConnect() {
       dbConnect();                         // lost due to either server restart, or a
     } else { 
 	console.log(err.code)                                     // connnection idle timeout (the wait_timeout
-      	dbConnect();
+        dbConnect();
+        tg.sendMessage(config.chatID, "DB error encountered. Restarted.")
 	//throw err;                                  // server variable configures this)
     }
   });
