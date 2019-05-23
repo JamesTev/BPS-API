@@ -26,8 +26,10 @@ exports.dbConnect = function dbConnect() {
     if(err.code === 'PROTOCOL_con_LOST') { // con to the MySQL server is usually
       console.log('DB connection lost - reconnecting...', err);
       dbConnect();                         // lost due to either server restart, or a
-    } else {                                      // connnection idle timeout (the wait_timeout
-      throw err;                                  // server variable configures this)
+    } else { 
+	console.log(err.code)                                     // connnection idle timeout (the wait_timeout
+      	dbConnect();
+	//throw err;                                  // server variable configures this)
     }
   });
 }
