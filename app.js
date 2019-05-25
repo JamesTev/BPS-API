@@ -10,7 +10,7 @@ var bodyParser = require('body-parser')
 var jwt = require('express-jwt');
 var jwks = require('jwks-rsa');
 
-var dbConnection = require('./db')
+var dbPool = require('./db')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -75,12 +75,18 @@ var headers = {
     'User-Agent':       'Super Agent/0.0.1',
     'Content-Type':     'application/json'
 }
-//connect to DB using connection instance
-<<<<<<< HEAD
-dbConnection.dbConnect()
-=======
-dbConnection.dbConnect();
 
->>>>>>> dev/test-deployment
+//connect to DB using connection instance
+var testQuery = function(){
+  dbPool.query("SELECT 1", function (err, result, fields) {
+    if (err){
+      console.log("Could not connect to DB")
+      throw err
+    }
+    console.log("Test query succeeded. DB connecteed")
+  });
+}
+
+testQuery()
 
 module.exports = app;

@@ -10,7 +10,7 @@ var con = dbConnection.con
 
 var instReadings = [];
 exports.instReadings = instReadings;
-var con = dbConnection.con
+var con = dbConnection
 
 exports.receive_readings = function (req, res) {
     // expects a json array of inst flow readings

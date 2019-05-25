@@ -1,6 +1,7 @@
 {
-    "host": "35.234.136.126",
+    "connectionLimit": 10,
+    "host": "localhost",
     "user": "root",
-    "password": "Imangi43052010",
+    "password": "pimples4305",
     "database": "bps_db"
 }
