@@ -76,6 +76,11 @@ var headers = {
     'Content-Type':     'application/json'
 }
 //connect to DB using connection instance
+<<<<<<< HEAD
 dbConnection.dbConnect()
+=======
+dbConnection.dbConnect();
+
+>>>>>>> dev/test-deployment
 
 module.exports = app;

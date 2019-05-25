@@ -10,12 +10,14 @@ var con = dbConnection.con
 
 var instReadings = [];
 exports.instReadings = instReadings;
+var con = dbConnection.con
 
 exports.receive_readings = function (req, res) {
     // expects a json array of inst flow readings
-    console.log(req.body)
+    console.log(req.body +" @ "+(new Date()).toLocaleString() +" from "+req.connection.remoteAddress)
     //TODO: decide if I should accept valid readings if there is one or more invalid readings in same pump cycle
     instReadings = [];
+
     var validReadCount = 0
     if(!Array.isArray(req.body)){
         req.body = [req.body]
