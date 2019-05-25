@@ -2,14 +2,7 @@ var express = require('express');
 var mysql = require('mysql');
 var tg = require('./telegramLib')
 var config = require('./config')
-
-//create con object to DB
-var dbConfig = {
-  host: "35.234.136.126",//"bps-instance.cl36mtjf67xy.eu-west-1.rds.amazonaws.com",
-  user: "root",
-  password: "Imangi43052010",
-  database: "bps_db"
-};
+var dbConfig = require('./dbconfig')
 
 var con = mysql.createConnection(dbConfig); // Recreate the con, since the old one cannot be reused.
 
@@ -29,9 +22,8 @@ exports.dbConnect = function dbConnect() {
       console.log('DB connection lost - reconnecting...', err);
       dbConnect();                         // lost due to either server restart, or a
     } else { 
-	console.log(err.code)                                     // connnection idle timeout (the wait_timeout
-        dbConnect();
-        tg.sendMessage(config.chatID, "DB error encountered. Restarted.")
+	      console.log(err.code)                                     // connnection idle timeout (the wait_timeout
+        
 	//throw err;                                  // server variable configures this)
     }
   });
