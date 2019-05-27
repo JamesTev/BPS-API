@@ -10,6 +10,8 @@ router.get('/inst_readings/:id', readings_controller.get_inst_reading_set)
 router.get('/overview_data/:id', readings_controller.get_overview_data) 
 router.get('/overview_data', readings_controller.get_overview_data) 
 
+router.delete('/:id', readings_controller.delete_record)
+
 router.post('/receive_reading_test', function (req, res) {
     console.log(req.body[0]);
     res.send("Test post data received");

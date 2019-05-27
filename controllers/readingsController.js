@@ -77,7 +77,7 @@ exports.get_inst_reading_set = function(req,res){
         return;    
     }  
     if(con){
-        con.query("SELECT * FROM readings_table WHERE overview_id = "+req.params.id+";", function (err, result, fields) {
+        con.query("SELECT * FROM readings_table WHERE overview_id = "+req.params.id+" ORDER BY t_offset;", function (err, result, fields) {
             if (err){
                 throw err
             }
@@ -127,6 +127,40 @@ exports.get_overview_data = function(req,res){
         internalDBError(res);
     }
     //res.json(result)
+}
+
+exports.delete_record = function (req,res){
+    if(req.params.hasOwnProperty("id")){
+        console.log("delete request received...")
+        if(isNaN(req.params.id)){
+            console.log("invalid ID")
+            res.status(400).json({
+                status: 'error',
+                message: 'reading ID to delete is not a valid integer',
+                data: {}
+            });        
+            return;
+        }
+        var sql = "DELETE FROM overview_table WHERE id = "+req.params.id+";"
+        con.query(sql, function (err, result) {
+            if (err) throw err;
+            if(result.affectedRows>0){
+                console.log("Record deleted successfully")
+                res.status(200).json({
+                    status: 'Record deleted.',
+                    message: '',
+                    data: result
+                });  
+            }
+        });
+    }else{
+        res.status(400).json({
+            status: 'error',
+            message: 'No reading ID supplied',
+            data: {}
+        }); 
+    }
+    
 }
 
 exports.send_tg = function(req, res){
@@ -220,14 +254,5 @@ function storeOverviewReadingInDB(data){
      });
   }
   
-  function removeRecordFromDB(id){
-      var sql = "DELETE FROM test_table WHERE id = "+id+";"
-      con.query(sql, function (err, result) {
-          if (err) throw err;
-          if(result.affectedRows>0){
-              console.log("Record deleted successfully")
-              return true
-          }
-      });
-  }
+
   

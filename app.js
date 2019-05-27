@@ -83,7 +83,7 @@ var testQuery = function(){
       console.log("Could not connect to DB")
       throw err
     }
-    console.log("Test query succeeded. DB connecteed")
+    console.log("Test query succeeded. DB connected")
   });
 }
 
