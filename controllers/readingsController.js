@@ -49,6 +49,8 @@ exports.store_session_data = function(req,res){
             message: 'Trying to store reading set but no instantaneous readings detected',
             data: {}
         }); 
+    }else if(instReadings.length == 1){
+        tg.sendMultipleRx({content: 'Trickle data detected'})
     }
     ovReadingObj = verifyReadingData(req.body, expectedKeysOverview)
     if(!ovReadingObj){
