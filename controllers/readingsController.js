@@ -97,6 +97,7 @@ exports.get_overview_data = function(req,res){
     var requestAll = false;
     var ID = -1;
     let whereClause = "";
+
     if(req.params.hasOwnProperty("id")){
         whereClause = "WHERE ID = "+req.params.id;
         console.log("Retrieve all overview data...");
@@ -109,8 +110,8 @@ exports.get_overview_data = function(req,res){
             });        
             return;
         }
-    }else if(req.query.hasOwnProperty("month")){
-        whereClause = 'WHERE MONTH(timestamp) = '+req.query.month;
+    }else if(req.query.hasOwnProperty("month") && req.query.hasOwnProperty("year")){
+        whereClause = 'WHERE MONTH(timestamp) = '+req.query.month+' AND YEAR(timestamp) = '+req.query.year;
     }
  
     if(con){
@@ -129,6 +130,39 @@ exports.get_overview_data = function(req,res){
         internalDBError(res);
     }
     //res.json(result)
+}
+
+exports.edit_note = function (req,res){
+
+    var err400 = null
+
+    if (!req.body){ //expecting 3 key-value pairs
+        err400 = 'Missing id and/or text params'
+    }
+    if(!(Object.keys(req.body).includes('id') && Object.keys(req.body).includes('note'))){
+        err400 = 'Missing request body'
+    }
+    if(err400!=null){
+        res.status(400).json({
+            status: 'error',
+            message: err400,
+            data: {}
+        }); 
+    }
+    console.log(req.body)
+    var sql = "UPDATE overview_table SET note ='"+req.body.note+"' WHERE id = "+req.body.id+";"
+    con.query(sql, function (err, result) {
+        if (err) throw err;
+        if(result.affectedRows>0){
+            console.log("Note updated successfully")
+            res.status(200).json({
+                status: 'Success',
+                message: 'Note updated',
+                data: result
+            });  
+        }
+    });
+    
 }
 
 exports.delete_record = function (req,res){
