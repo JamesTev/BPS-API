@@ -29,14 +29,15 @@ exports.receive_readings = function (req, res) {
     }
    if(!validReadCount){
         tg.sendMultipleRx({content: `Bad payload received from BPS embedded. Request body: ${req.body}`})
-        console.log("invalid or missing keys in reading data")
+        console.log("invalid or missing keys in reading data: ")
+        console.log(req.body)
         return res.sendStatus(400) // equivalent to res.status(200).send('Bad Request')
    }
   else{
         res.send(validReadCount+" / "+Object.keys(req.body).length+" inst. readings received.")
         console.log(validReadCount+" / "+Object.keys(req.body).length+" inst. readings received.")
   }
-  console.log(instReadings);
+//   console.log(instReadings);
 }
 
 //Receive overview data and store pump session data
