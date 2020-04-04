@@ -28,6 +28,7 @@ exports.receive_readings = function (req, res) {
         }
     }
    if(!validReadCount){
+        tg.sendMultipleRx({content: `Bad payload received from BPS embedded. Request body: ${req.body}`})
         console.log("invalid or missing keys in reading data")
         return res.sendStatus(400) // equivalent to res.status(200).send('Bad Request')
    }
