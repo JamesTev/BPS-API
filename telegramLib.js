@@ -5,11 +5,15 @@
  * @version 1.1.0
  */
 
-var config	 = require ("./config.json")
+var dotenv = require('dotenv')
+
+dotenv.config()
+const _env = process.env
+
 var Telegram   = require ('telebot');
 var fs = require('fs');
 
-const tg = new Telegram(config.telegramBotID); //create Telegram instance that is registered to a Telegram Bot to accept commands
+const tg = new Telegram(_env.TELEGRAM_BOT_ID); //create Telegram instance that is registered to a Telegram Bot to accept commands
 
 /**
  * Function that uses Telegram's built-in tg.sendMessage() fn to send multiple messages to a
@@ -35,7 +39,7 @@ const sendMultipleRx = exports.sendMultipleRx = (jsonMessage) => {
  * @returns {object} - Array of Promises corresponding to each message that is sent
  */
 const readTelegramConfig = () => {
-	var myText = fs.readFileSync(config.telegramConfigFile, 'utf8'); //read synchronously (block execution)
+	var myText = fs.readFileSync('./telegram.config', 'utf8'); //read synchronously (block execution)
 	return JSON.parse(myText);
 } 
 
@@ -46,7 +50,7 @@ const readTelegramConfig = () => {
  * @param {string} newText - Array of Promises corresponding to each message that is sent
  */
 const writeTelegramConfig = (newText) => {
-	fs.writeFileSync(config.telegramConfigFile, newText, function (err) {
+	fs.writeFileSync('./telegram.config', newText, function (err) {
 	if (err) throw err;
 	console.log('Saved! - ' + newText);
   });
@@ -94,7 +98,7 @@ const registerHandler = (msg) => {
         }else{ //if person A is registering themself
             msg.reply.text("You have been successfully registered.")
         }
-        sendMultipleRx ({content :" A new user has been registered on WBX Gate Controller", target : config.telegramSupervisor})[0].catch((err)=>console.log(err));
+        sendMultipleRx ({content :" A new user has been registered on WBX Gate Controller", target : _env.telegramSupervisor})[0].catch((err)=>console.log(err));
         //tg.sendMessage(config.telegramSupervisor, "Test").catch((err) => console.log(err)) //this works exactly the same
 
 	} else {

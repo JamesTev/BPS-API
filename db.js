@@ -2,7 +2,17 @@ var express = require('express');
 var mysql = require('mysql');
 var tg = require('./telegramLib')
 var config = require('./config')
-var dbConfig = require('./dbconfig')
+var dotenv = require('dotenv')
+
+dotenv.config()
+const _env = process.env
+
+var dbConfig = {
+    "host": _env.DB_HOST,
+    "user": "root",
+    "password": _env.DB_PW,
+    "database": "bps_db"
+}
 
 var pool = mysql.createPool(dbConfig)
 
