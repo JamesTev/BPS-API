@@ -3,7 +3,13 @@ const axios = require('axios').default;
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
+router.get('/api', function (req, res, next) {
+
+  res.status(200).send("API live. Use POST api/readingSet to send data.")
+
+});
+
+/* POST home page. */
 router.post('/api/readingSet', function (req, res, next) {
 
   axios.post('https://bps-v2.vercel.app/api/readingSet', req.body)
