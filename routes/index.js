@@ -1,12 +1,22 @@
+const axios = require('axios').default;
+
 var express = require('express');
-var app = require('../app')
-var process = require('process')
 var router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  var d = new Date()
-  res.sendFile(process.cwd() + '/test.html');
+router.post('/api/readingSet', function (req, res, next) {
+
+  axios.post('https://bps-v2.vercel.app/api/readingSet', req.body)
+    .then(function (response) {
+      console.log(response);
+      res.status(200).send("Success: " + JSON.stringify(response.data))
+    })
+    .catch(function (error) {
+      console.log(error);
+      res.status(500).send("Error: " + error)
+    });
+
 });
- 
+
 module.exports = router;
+
